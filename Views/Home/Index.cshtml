@@ -1,0 +1,25 @@
+<partial name="_HeaderPartial"/>
+@model List<Post>
+
+<div class="text-center">
+	@{
+		foreach(var Post in Model)
+		{
+			<div>
+				<h3>Title: @Post.Title Created: @Post.CreatedAt By: @Post.Author.FirstName</h3>
+				@{
+					if((int)Math.Floor((DateTime.Now - Post.CreatedAt).TotalMinutes) < 30  && Post.UserId == ViewBag.User.UserId)
+					{
+						<button onclick="location.href='@Url.Action("EditPost", "Home", new {PostId = @Post.PostId})'" href="">Edit</button>
+					}
+				}
+				<p>@Post.Message</p>
+				<div>
+					<button onclick="location.href='@Url.Action("VoteUp", "Home", new {PostId = @Post.PostId})'" href="">Up: @Post.Votes.Where(l => l.isUp).Count()</button>
+					<button onclick="location.href='@Url.Action("VoteDown", "Home", new {PostId = @Post.PostId})'" href="">Down: @Post.Votes.Where(l => l.isDown).Count()</button>
+				</div>
+			</div>
+		}
+	}
+</div>
+<button onclick="location.href='@Url.Action("PostForm", "Home")'">Add Post</button>
